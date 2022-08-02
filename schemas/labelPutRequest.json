@@ -1,0 +1,18 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "Update a label",
+    "required": [
+        "userLabel"
+    ],
+    "properties": {
+        "userLabel": {
+            "type": "string",
+            "title": "userLabel",
+            "minLength": 1,
+            "default": "",
+            "pattern": "^(.*)$"
+        }
+    }
+}

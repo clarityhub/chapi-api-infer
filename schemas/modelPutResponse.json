@@ -1,0 +1,38 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "Update Model Response",
+    "required": [
+        "item"
+    ],
+    "properties": {
+        "item": {
+            "type": "object",
+            "title": "Item",
+            "properties": {
+                "modelId": {
+                    "type": "string"
+                },
+                "organizationId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "creatorUserId": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "modifiedAt": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

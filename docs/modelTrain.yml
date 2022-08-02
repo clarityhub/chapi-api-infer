@@ -1,0 +1,72 @@
+documentation:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  post:
+    operationId: postTrainModel
+    summary: "Train an Infer model"
+    description: "Train an Infer model"
+    tags:
+      - "train"
+    security:
+      - BasicAuth: []
+    requestBody:
+      description: >-
+        Required post body for training a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/TrainModelPostRequest'
+              - $ref: '#/components/schemas/TrainModelPostRequestSimple'
+    responses:
+      "200":
+        description: ModelLabels
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainModelPostResponse'
+# Copy of the normal documentation, but with a different:
+# - security methods
+# - tags
+# - operationIdweb:
+web:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  post:
+    operationId: postTrainModelWeb
+    summary: "Train an Infer model"
+    description: "Train an Infer model"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    requestBody:
+      description: >-
+        Required post body for training a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/TrainModelPostRequest'
+              - $ref: '#/components/schemas/TrainModelPostRequestSimple'
+    responses:
+      "200":
+        description: ModelLabels
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainModelPostResponse'

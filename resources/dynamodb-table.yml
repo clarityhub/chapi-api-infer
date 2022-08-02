@@ -1,0 +1,58 @@
+Resources:
+  InferModelsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.inferModelsTableName}
+      AttributeDefinitions:
+        - AttributeName: organizationId
+          AttributeType: S
+        - AttributeName: modelId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: organizationId
+          KeyType: HASH
+        - AttributeName: modelId
+          KeyType: RANGE
+      # Set the capacity based on the stage
+      # ProvisionedThroughput:
+      #   ReadCapacityUnits: ${self:custom.tableThroughput}
+      #   WriteCapacityUnits: ${self:custom.tableThroughput}
+      BillingMode: PAY_PER_REQUEST
+  InferModelUtterancesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.inferModelUtternacesTableName}
+      AttributeDefinitions:
+        - AttributeName: modelId
+          AttributeType: S
+        - AttributeName: utteranceId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: modelId
+          KeyType: HASH
+        - AttributeName: utteranceId
+          KeyType: RANGE
+      # Set the capacity based on the stage
+      # ProvisionedThroughput:
+      #   ReadCapacityUnits: ${self:custom.tableThroughput}
+      #   WriteCapacityUnits: ${self:custom.tableThroughput}
+      BillingMode: PAY_PER_REQUEST
+  InferModelLabelsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.inferModelLabelsTableName}
+      AttributeDefinitions:
+        - AttributeName: modelId
+          AttributeType: S
+        - AttributeName: labelId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: modelId
+          KeyType: HASH
+        - AttributeName: labelId
+          KeyType: RANGE
+      # Set the capacity based on the stage
+      # ProvisionedThroughput:
+      #   ReadCapacityUnits: ${self:custom.tableThroughput}
+      #   WriteCapacityUnits: ${self:custom.tableThroughput}
+      BillingMode: PAY_PER_REQUEST

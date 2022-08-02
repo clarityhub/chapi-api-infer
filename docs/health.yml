@@ -1,0 +1,14 @@
+documentation:
+  get:
+    operationId: health
+    summary: "Check the health of the service"
+    description: "Checks that the dependencies of the account service are all up and accessible"
+    tags:
+      - "health"
+    responses:
+      "200":
+        description: Status and list of services
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthResponse'

@@ -1,0 +1,32 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "Health Response",
+    "required": [
+        "status",
+        "items"
+    ],
+    "properties": {
+        "status": {
+            "type": "string",
+            "title": "status",
+            "pattern": "^(.*)$"
+        },
+        "items": {
+            "type": "array",
+            "title": "items",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "service": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "object"
+                    }
+                }
+            }
+        }
+    }
+}

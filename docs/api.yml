@@ -1,0 +1,102 @@
+openapi: 3.0.0
+info:
+  version: "1"
+  title: "Clarity Hub Infer Service API"
+  description: "This API handles creating, using and maintaining Inference Models"
+components:
+  parameters:
+    organization:
+      in: header
+      name: X-Clarityhub-Organization
+      schema:
+        type: string
+        format: uuid
+      required: true
+  schemas:
+    HealthResponse:
+      $ref: ../schemas/healthResponse.json
+    ModelsGetResponse:
+      $ref: ../schemas/modelsGetResponse.json
+    ModelGetResponse:
+      $ref: ../schemas/modelGetResponse.json
+    ModelCreateRequest:
+      $ref: ../schemas/modelCreateRequest.json
+    ModelCreateResponse:
+      $ref: ../schemas/modelCreateResponse.json
+    ModelPutRequest:
+      $ref: ../schemas/modelPutRequest.json
+    ModelPutResponse:
+      $ref: ../schemas/modelPutResponse.json
+    TrainModelPostRequest:
+      $ref: ../schemas/trainModelPostRequest.json
+    TrainModelPostRequestSimple:
+      $ref: ../schemas/trainModelPostRequestSimple.json
+    TrainModelPostResponse:
+      $ref: ../schemas/trainModelPostResponse.json
+    PredictLabelPostRequest:
+      $ref: ../schemas/predictLabelPostRequest.json
+    PredictLabelPostResponse:
+      $ref: ../schemas/predictLabelPostResponse.json
+    PredictSimilarPostRequest:
+      $ref: ../schemas/predictSimilarPostRequest.json
+    PredictSimilarPostResponse:
+      $ref: ../schemas/predictSimilarPostResponse.json
+    LabelsGetResponse:
+      $ref: ../schemas/labelsGetResponse.json
+    LabelGetResponse:
+      $ref: ../schemas/labelGetResponse.json
+    LabelPutRequest:
+      $ref: ../schemas/labelPutRequest.json
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    BearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: health
+  - name: models
+  - name: web
+    description: >-
+      Webapp accessible version of endpoints that would normally
+      need an Access Key ID and Access Key Secret. Instead, these
+      endpoints function using the `Authorization: Bearer {Cognito User JWT}`
+      and `X-Clarityhub-Organizaiton` headers.
+paths:
+  "/health":
+    $ref: ./health.yml#/documentation
+  "/models":
+    $ref: ./models.yml#/documentation
+  "/web/models":
+    $ref: ./models.yml#/web
+
+  "/models/{modelId}":
+    $ref: ./model.yml#/documentation
+  "/web/models/{modelId}":
+    $ref: ./model.yml#/web
+
+  "/models/{modelId}/labels":
+    $ref: ./labels.yml#/documentation
+  "/web/models/{modelId}/labels":
+    $ref: ./labels.yml#/web
+
+  "/models/{modelId}/labels/{labelId}":
+    $ref: ./label.yml#/documentation
+  "/web/models/{modelId}/labels/{labelId}":
+    $ref: ./label.yml#/web
+
+  "/models/{modelId}/train":
+    $ref: ./modelTrain.yml#/documentation
+  "/web/models/{modelId}/train":
+    $ref: ./modelTrain.yml#/web
+
+  "/models/{modelId}/predict/label":
+    $ref: ./predictLabel.yml#/documentation
+  "/web/models/{modelId}/predict/label":
+    $ref: ./predictLabel.yml#/web
+
+  "/models/{modelId}/predict/similar":
+    $ref: ./predictSimilar.yml#/documentation
+  "/web/models/{modelId}/predict/similar":
+    $ref: ./predictSimilar.yml#/web

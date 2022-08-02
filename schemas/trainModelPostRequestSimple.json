@@ -1,0 +1,20 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "Train Model",
+    "required": [
+        "utterances"
+    ],
+    "properties": {
+        "utterances": {
+            "type": "array",
+            "maxItems": 10000,
+            "title": "Utterances",
+            "items": {
+                "type": "string",
+                "title": "Utterance Item"
+            }
+        }
+    }
+}

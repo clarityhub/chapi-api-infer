@@ -1,0 +1,90 @@
+documentation:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  post:
+    operationId: postPredictLabel
+    summary: "Predict labels from an infer model"
+    description: "Predict labels from an infer model"
+    tags:
+      - "predict"
+    security:
+      - BasicAuth: []
+    parameters:
+      - in: query
+        name: threshold
+        schema:
+          type: integer
+        description: The threshold to return similar labels
+      - in: query
+        name: version
+        schema:
+          type: string
+        description: The version of the labels you want to run against. Defaults to the latest version
+    requestBody:
+      description: >-
+        Required post body for training a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PredictLabelPostRequest'
+    responses:
+      "200":
+        description: ModelLabels
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PredictLabelPostResponse'
+# Copy of the normal documentation, but with a different:
+# - security methods
+# - tags
+# - operationIdweb:
+web:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  post:
+    operationId: postPredictLabelWeb
+    summary: "Predict labels from an infer model"
+    description: "Predict labels from an infer model"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: query
+        name: threshold
+        schema:
+          type: integer
+        description: The threshold to return similar labels
+      - in: query
+        name: version
+        schema:
+          type: string
+        description: The version of the labels you want to run against. Defaults to the latest version
+    requestBody:
+      description: >-
+        Required post body for training a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PredictLabelPostRequest'
+    responses:
+      "200":
+        description: ModelLabels
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PredictLabelPostResponse'

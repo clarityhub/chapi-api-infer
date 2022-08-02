@@ -1,0 +1,113 @@
+documentation:
+  parameters:
+    - in: path
+      name: labelId
+      required: true
+      schema:
+        type: string
+      description: The label id
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  get:
+    operationId: getLabel
+    summary: "Get a label by its label id"
+    description: "Get a label by its label id"
+    tags:
+      - "labels"
+    security:
+      - BasicAuth: []
+    responses:
+      "200":
+        description: Label
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabelGetResponse'
+  
+  put:
+    operationId: putLabel
+    summary: "Update a label by its labelId"
+    description: "Update a label by its labelId"
+    tags:
+      - "labels"
+    security:
+      - BasicAuth: []
+    requestBody:
+      description: >-
+        Required put body for updating a label.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LabelPutRequest'
+    responses:
+      "200":
+        description: Label
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabelGetResponse'
+
+# Copy of the normal documentation, but with a different:
+# - security methods
+# - tags
+# - operationIdweb:
+web:
+  parameters:
+    - in: path
+      name: labelId
+      required: true
+      schema:
+        type: string
+      description: The label id
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  get:
+    operationId: getLabelWeb
+    summary: "Get a label by its label id"
+    description: "Get a label by its label id"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    responses:
+      "200":
+        description: Label
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabelGetResponse'
+  
+  put:
+    operationId: putLabelWeb
+    summary: "Update a label by its labelId"
+    description: "Update a label by its labelId"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    requestBody:
+      description: >-
+        Required put body for updating a label.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LabelPutRequest'
+    responses:
+      "200":
+        description: Label
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabelGetResponse'

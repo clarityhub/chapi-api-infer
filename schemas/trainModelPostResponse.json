@@ -1,0 +1,79 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "Training Labels",
+    "required": [
+        "items"
+    ],
+    "properties": {
+        "items": {
+            "type": "array",
+            "title": "Labels",
+            "items": {
+                "type": "object",
+                "title": "Label",
+                "required": [
+                    "organizationId",
+                    "modelId",
+                    "labelId",
+                    "exemplarUtterance",
+                    "numberOfUtterances",
+                    "label",
+                    "createdAt",
+                    "version"
+                ],
+                "properties": {
+                    "organizationId": {
+                        "type": "string",
+                        "pattern": "^(.*)$"
+                    },
+                    "modelId": {
+                        "type": "string",
+                        "pattern": "^(.*)$"
+                    },
+                    "labelId": {
+                        "type": "string",
+                        "pattern": "^(.*)$"
+                    },
+                    "exemplarUtterance": {
+                        "type": "object",
+                        "required": [
+                            "utterance"
+                        ],
+                        "properties": {
+                            "utterance": {
+                                "type": "string"
+                            },
+                            "label": {
+                                "type": "string",
+                                "pattern": "^(.*)$"
+                            },
+                            "meta": {
+                                "type": "object"
+                            }
+                        }
+                    },
+                    "numberOfUtterances": {
+                        "type": "integer",
+                        "default": 0
+                    },
+                    "label": {
+                        "type": "string",
+                        "pattern": "^(.*)$"
+                    },
+                    "userLabel": {
+                        "type": "string",
+                        "pattern": "^(.*)$"
+                    },
+                    "createdAt": {
+                        "type": "integer"
+                    },
+                    "version": {
+                        "type": "integer"
+                    }
+                }
+            }
+        }
+    }
+}

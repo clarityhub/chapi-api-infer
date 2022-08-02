@@ -1,0 +1,20 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "Get Similar Utterances",
+    "required": [
+        "utterances"
+    ],
+    "properties": {
+        "utterances": {
+            "type": "array",
+            "maxItems": 100,
+            "title": "Utterances",
+            "items": {
+                "type": "string",
+                "title": "Utterance Item"
+            }
+        }
+    }
+}

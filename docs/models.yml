@@ -1,0 +1,82 @@
+documentation:
+  get:
+    operationId: getModels
+    summary: "Get all models"
+    description: "Get all models that exist in your organization"
+    tags:
+      - "models"
+    security:
+      - BasicAuth: []
+    responses:
+      "200":
+        description: Models
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelsGetResponse'
+  post:
+    operationId: createModel
+    summary: "Create a model"
+    description: "Create a new Inference model"
+    tags:
+      - "models"
+    security:
+      - BasicAuth: []
+    requestBody:
+      description: >-
+        Required post body for creating a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ModelCreateRequest'
+    responses:
+      "200":
+        description: Model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelCreateResponse'
+# Copy of the normal documentation, but with a different:
+# - security methods
+# - tags
+# - operationId
+web:
+  get:
+    operationId: getModelsWeb
+    summary: "Get all models"
+    description: "Get all models that exist in your organization"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    responses:
+      "200":
+        description: Models
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelsGetResponse'
+  post:
+    operationId: createModelWeb
+    summary: "Create a model"
+    description: "Create a new Inference model"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    requestBody:
+      description: >-
+        Required post body for creating a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ModelCreateRequest'
+    responses:
+      "200":
+        description: Model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelCreateResponse'

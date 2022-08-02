@@ -1,0 +1,47 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "Label Get Response",
+    "required": [
+        "item"
+    ],
+    "properties": {
+        "item": {
+            "type": "object",
+            "title": "Item",
+            "properties": {
+                "modelId": {
+                    "type": "string"
+                },
+                "organizationId": {
+                    "type": "string"
+                },
+                "labelId": {
+                    "type": "string"
+                },
+                "userLabel": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "exemplarUtterance": {
+                    "type": "object"
+                },
+                "numberOfUtterances": {
+                    "type": "number"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "modifiedAt": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,497 @@
+service: clarityhub-api-infer
+# frameworkVersion: "=1.45.1"
+
+plugins:
+  - serverless-webpack
+  - serverless-dynamodb-local
+  - serverless-s3-local
+  - serverless-offline
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  inferModelsTableName: ${self:custom.stage}-inferModels
+  inferModelUtternacesTableName: ${self:custom.stage}-inferModelUtterances
+  inferModelLabelsTableName: ${self:custom.stage}-inferModelLabels
+  inferModelBucketName: ${self:custom.stage}-infermodels.clarityhub.io
+  bugsnagApiKey: 
+  userPoolId:
+    local:
+    development:
+    production:
+  webpack:
+    webpackConfig: ./configs/webpack.config.js
+    includeModules: true
+  dynamodb:
+    stages:
+      - local
+    start:
+      port: 8000
+      migrate: true
+  s3:
+    host: 0.0.0.0
+    port: 8100
+    directory: /tmp
+  serverless-offline:
+    port: 4000
+  cors:
+    origin: '*'
+    headers:
+      - Content-Type
+      - X-Amz-Date
+      - Authorization
+      - X-Api-Key
+      - X-Amz-Security-Token
+      - X-Amz-User-Agent
+      - X-ClarityHub-Organization
+    allowCredentials: false
+  apiDocs: ${file(./docs/api.yml)}
+  accessKeyAuthorizer:
+    local:
+      name: localAccessKeyAuthorizer
+      resultTtlInSeconds: 0
+      type: request
+      identitySource: method.request.header.Authorization
+    development:
+      arn:
+      resultTtlInSeconds: 0
+      identitySource: method.request.header.Authorization
+      type: request
+    production:
+      arn:
+      resultTtlInSeconds: 0
+      identitySource: method.request.header.Authorization
+      type: request
+  bearerAuthorizer:
+    local:
+      name: localBearerAuthorizer
+      resultTtlInSeconds: 10
+      type: request
+      identitySource: method.request.header.Authorization, method.request.header.X-Clarityhub-Organization
+    development:
+      arn:
+      resultTtlInSeconds: 10
+      type: request
+      identitySource: method.request.header.Authorization, method.request.header.X-Clarityhub-Organization
+    production:
+      arn:
+      resultTtlInSeconds: 10
+      type: request
+      identitySource: method.request.header.Authorization, method.request.header.X-Clarityhub-Organization
+  inferEndpoint:
+    local: http://clarityhub-api-nlp:4000
+    development: https://api.dev.clarityhub.io/nlp
+    production: https://api.clarityhub.io/nlp
+  accountsEndpoint:
+    local: http://clarityhub-api-accounts:4000
+    development: https://api.dev.clarityhub.io/accounts
+    production: https://api.clarityhub.io/accounts
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'local'}
+  region: ${env:AWS_REGION, 'us-west-2'}
+  memorySize: 512
+  timeout: 20
+  environment:
+    inferModelsTableName: ${self:custom.inferModelsTableName}
+    inferModelUtternacesTableName: ${self:custom.inferModelUtternacesTableName}
+    inferModelLabelsTableName: ${self:custom.inferModelLabelsTableName}
+    inferModelBucketName: ${self:custom.inferModelBucketName}
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    USER_POOL_ID: ${self:custom.userPoolId.${self:custom.stage}}
+    AWS_INFER_ENDPOINT: ${self:custom.inferEndpoint.${self:custom.stage}}
+    AWS_ACCOUNTS_ENDPOINT: ${self:custom.accountsEndpoint.${self:custom.stage}}
+    BUGSNAG_API_KEY: ${self:custom.bugsnagApiKey}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:ListTables
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-west-2:*:*"
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminGetUser
+      Resource: "arn:aws:cognito-idp:us-west-2:*:*"
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource: "arn:aws:lambda:us-west-2:*:*"
+    - Effect: Allow
+      Action:
+        - s3:DeleteObject
+        - s3:GetObject
+        - s3:PutObject
+      Resource: "arn:aws:s3:::${self:custom.inferModelBucketName}/*"
+
+package:
+  individually: true
+  include:
+    - docs/**
+    - schemas/**
+  exclude:
+    - node_modules/aws-sdk/**
+    - .dynamodb/**
+    - build/**
+    - data/**
+    - fixtures/**
+    - resources/**
+    - .gitignore
+    - .gitconfig
+    - .editorconfig
+    - .eslintignore
+    - .eslintrc
+    - .npmrc
+    - .nycrc
+    - .npmignore
+    - '*coveralls.yml'
+    - .circleci/**
+    - '*circle.yml'
+    - '*travis.yml'
+    - '*.md'
+    - '*.apib'
+    - .vscode/**
+    - package-lock.json
+    - .npm-upgrade.json
+    - sonar-project.properties
+    - rollup.config.*
+    - yarn.lock
+    # common project directories
+    - coverage/**
+    - .nyc_output/**
+    - docs/**
+    - test/**
+    - tests/**
+    - CODEOWNERS
+    # aws-sdk is included in Lambda
+    - node_modules/**/aws-sdk/**
+    # common things that node_modules fail to .npmignore
+    - node_modules/**/*.md
+    - node_modules/**/*.flow
+    - node_modules/**/*.patch
+    - node_modules/**/*.conf
+    - node_modules/**/*.markdown
+    - node_modules/**/*.coffee
+    - node_modules/**/jsdoc_conf.json
+    - node_modules/**/*Makefile
+    - node_modules/**/Dockerfile
+    - node_modules/**/*.txt
+    - node_modules/**/*.yml
+    - node_modules/**/*.xml
+    - node_modules/**/*.html
+    - node_modules/**/test/**
+    - node_modules/**/tests/**
+    - node_modules/**/docs/**
+    - node_modules/**/examples/**
+    - node_modules/**/coverage/**
+    - node_modules/**/.nyc_output/**
+    - node_modules/**/bin/**
+    - node_modules/**/bower.json
+    - node_modules/**/karma.conf.js
+    - node_modules/**/Gruntfile.js
+    - node_modules/**/rollup.config.*		
+    - node_modules/**/yarn.lock
+    - node_modules/**/sonar-project.properties	
+    - node_modules/**/package-lock.json
+    - node_modules/**/*.d.ts
+    - node_modules/**/*.map
+    - node_modules/**/tsconfig.json
+    - node_modules/**/AUTHORS
+    - node_modules/**/CODEOWNERS
+    - node_modules/**/OWNERS
+    - node_modules/**/license*
+    - node_modules/**/licence*
+    - node_modules/**/LICENSE*
+    - node_modules/**/LICENCE*
+    - node_modules/**/License*
+    - node_modules/**/Licence*
+    - node_modules/**/*.iml
+    - node_module/**/*.bash_completion.in
+    # yes, these are real
+    - node_modules/**/*.gif
+    - node_modules/**/*.png
+    - node_modules/**/*.jpg
+    - node_modules/**/*.jpeg
+    # module-specific odd things
+    - node_modules/**/winston/scratch/**
+    - node_modules/**/sshpk/man/**
+    - node_modules/**/bluebird/js/browser/**
+    - node_modules/**/date-fns/docs.json
+    - node_modules/**/aws-xray-sdk-core/doc-src/**
+    # tensorflow things
+    - node_modules/**/benchmarks/**
+
+functions:
+  # ===== Authorizors =====
+  localAccessKeyAuthorizer:
+    handler: src/routes/localAccessKeyAuthorizer.default
+
+  localBearerAuthorizer:
+    handler: src/routes/localBearerAuthorizer.default
+
+  # ===== Health Endpoint =====
+  health:
+    handler: src/routes/health.default
+    events:
+      - http:
+          path: health
+          method: GET
+
+  # ===== Public Swagger Endpoint =====
+  swagger:
+    handler: src/routes/swagger.default
+    events:
+      - http:
+          path: swagger
+          method: GET
+          cors: true
+
+  # ===== Infer Models =====
+  modelsGet:
+    handler: src/routes/models.getAll
+    events:
+      - http:
+          path: models
+          method: get
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+      - http:
+          path: web/models
+          method: get
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+
+  modelsCreate:
+    handler: src/routes/models.create
+    events:
+      - http:
+          path: models
+          method: POST
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+      - http:
+          path: web/models
+          method: POST
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+
+  modelGet:
+    handler: src/routes/models.get
+    events:
+      - http:
+          path: models/{modelId}
+          method: get
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+      - http:
+          path: web/models/{modelId}
+          method: get
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+
+  modelDelete:
+    handler: src/routes/models.del
+    events:
+      - http:
+          path: models/{modelId}
+          method: delete
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+      - http:
+          path: web/models/{modelId}
+          method: delete
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+  
+  modelUpdate:
+    handler: src/routes/models.edit
+    events:
+      - http:
+          path: models/{modelId}
+          method: put
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+      - http:
+          path: web/models/{modelId}
+          method: put
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+  
+  # ===== Labels =====
+  labelsGet:
+    handler: src/routes/labels.getAll
+    events:
+      - http:
+          path: models/{modelId}/labels
+          method: get
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+      - http:
+          path: web/models/{modelId}/labels
+          method: get
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+
+  labelGet:
+    handler: src/routes/labels.get
+    events:
+      - http:
+          path: models/{modelId}/labels/{labelId}
+          method: get
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+      - http:
+          path: web/models/{modelId}/labels/{labelId}
+          method: get
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+  
+  labelUpdate:
+    handler: src/routes/labels.edit
+    events:
+      - http:
+          path: models/{modelId}/labels/{labelId}
+          method: put
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+      - http:
+          path: web/models/{modelId}/labels/{labelId}
+          method: put
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+
+  # ===== Training and Infering =====
+  modelTrain:
+    handler: src/routes/infer.train
+    events:
+      - http:
+          path: models/{modelId}/train
+          method: post
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+      - http:
+          path: web/models/{modelId}/train
+          method: post
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+
+  modelPredictSimilar:
+    handler: src/routes/infer.predictSimilar
+    events:
+      - http:
+          path: models/{modelId}/predict/similar
+          method: post
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+            querystrings:
+              threshold: false
+      - http:
+          path: web/models/{modelId}/predict/similar
+          method: post
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+            querystrings:
+              threshold: false
+  
+  modelPredictLabels:
+    handler: src/routes/infer.predictLabels
+    events:
+      - http:
+          path: models/{modelId}/predict/labels
+          method: post
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.accessKeyAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+            querystrings:
+              threshold: false
+      - http:
+          path: web/models/{modelId}/predict/labels
+          method: post
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.bearerAuthorizer.${self:custom.stage}}
+          request:
+            parameters:
+              paths:
+                modelId: true
+            querystrings:
+              threshold: false
+
+  # modelTrainProcess:
+  #   handler: src/routes/infer.trainProcess
+  #   events:
+  #     - s3: ${self:custom.inferModelBucketName}
+
+resources:
+  # API Gateway Errors
+  - ${file(resources/api-gateway-errors.yml)}
+  # DynamoDB
+  - ${file(resources/dynamodb-table.yml)}
+  # S3
+  - ${file(resources/s3-bucket.yml)}

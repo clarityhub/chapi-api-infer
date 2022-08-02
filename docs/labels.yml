@@ -1,0 +1,64 @@
+documentation:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  get:
+    operationId: getLabels
+    summary: "Get the labels that have been infered for a model"
+    description: "Get the labels that have been infered for a model"
+    tags:
+      - "labels"
+    security:
+      - BasicAuth: []
+    parameters:
+      - in: query
+        name: version
+        schema:
+          type: string
+        description: Filter by version. Defaults to showing all versions of labels
+    responses:
+      "200":
+        description: Labels
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabelsGetResponse'
+# Copy of the normal documentation, but with a different:
+# - security methods
+# - tags
+# - operationIdweb:
+web:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  get:
+    operationId: getLabelsWeb
+    summary: "Get the labels that have been infered for a model"
+    description: "Get the labels that have been infered for a model"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: query
+        name: version
+        schema:
+          type: string
+        description: Filter by version. Defaults to showing all versions of labels
+    responses:
+      "200":
+        description: Labels
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabelsGetResponse'

@@ -1,0 +1,80 @@
+documentation:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  post:
+    operationId: postPredictSimilar
+    summary: "Predict utterances from an infer model"
+    description: "Predict utterances from an infer model"
+    tags:
+      - "predict"
+    security:
+      - BasicAuth: []
+    parameters:
+      - in: query
+        name: threshold
+        schema:
+          type: integer
+        description: The threshold to return similar utterances
+    requestBody:
+      description: >-
+        Required post body for training a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PredictSimilarPostRequest'
+    responses:
+      "200":
+        description: SimilarUtterances
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PredictSimilarPostResponse'
+# Copy of the normal documentation, but with a different:
+# - security methods
+# - tags
+# - operationIdweb:
+web:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  post:
+    operationId: postPredictSimilarWeb
+    summary: "Predict similiar utterances from an infer model"
+    description: "Predict similiar utterances from an infer model"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    parameters:
+      - in: query
+        name: threshold
+        schema:
+          type: integer
+        description: The threshold to return similar utterances
+    requestBody:
+      description: >-
+        Required post body for training a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PredictSimilarPostRequest'
+    responses:
+      "200":
+        description: SimilarUtterances
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PredictSimilarPostResponse'

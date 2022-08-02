@@ -1,0 +1,53 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "The Root Schema",
+    "required": [
+        "items"
+    ],
+    "properties": {
+        "items": {
+            "type": "array",
+            "title": "The Items Schema",
+            "items": {
+                "type": "object",
+                "title": "The Items Schema",
+                "required": [
+                    "utterance",
+                    "similar"
+                ],
+                "properties": {
+                    "utterance": {
+                        "type": "string",
+                        "title": "The Utterance Schema",
+                        "pattern": "^(.*)$"
+                    },
+                    "similar": {
+                        "type": "array",
+                        "title": "The Similar Schema",
+                        "items": {
+                            "type": "object",
+                            "title": "The Items Schema",
+                            "required": [
+                                "utterance",
+                                "similarity"
+                            ],
+                            "properties": {
+                                "utterance": {
+                                    "type": "string",
+                                    "title": "The Utterance Schema",
+                                    "pattern": "^(.*)$"
+                                },
+                                "similarity": {
+                                    "type": "number",
+                                    "title": "The Similarity Schema"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

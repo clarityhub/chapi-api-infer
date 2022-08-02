@@ -1,0 +1,132 @@
+documentation:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  get:
+    operationId: getModel
+    summary: "Get a model by its modelId"
+    description: "Get a model by its modelId"
+    tags:
+      - "models"
+    security:
+      - BasicAuth: []
+    responses:
+      "200":
+        description: Model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelGetResponse'
+
+  put:
+    operationId: putModel
+    summary: "Update a model by its modelId"
+    description: "Update a model by its modelId"
+    tags:
+      - "models"
+    security:
+      - BasicAuth: []
+    requestBody:
+      description: >-
+        Required put body for updating a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ModelPutRequest'
+    responses:
+      "200":
+        description: Model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelPutResponse'
+  
+  delete:
+    operationId: deleteModel
+    summary: "Delete a model by its modelId"
+    description: "Delete a model by its modelId"
+    tags:
+      - "models"
+    security:
+      - BasicAuth: []
+    responses:
+      "200":
+        description: Model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelGetResponse'
+# Copy of the normal documentation, but with a different:
+# - security methods
+# - tags
+# - operationIdweb:
+web:
+  parameters:
+    - in: path
+      name: modelId
+      required: true
+      schema:
+        type: string
+      description: The model id
+
+  get:
+    operationId: getModelWeb
+    summary: "Get a model by its modelId"
+    description: "Get a model by its modelId"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    responses:
+      "200":
+        description: Model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelGetResponse'
+
+  put:
+    operationId: putModelWeb
+    summary: "Update a model by its modelId"
+    description: "Update a model by its modelId"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    requestBody:
+      description: >-
+        Required put body for updating a model.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ModelPutRequest'
+    responses:
+      "200":
+        description: Model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelPutResponse'
+
+  delete:
+    operationId: deleteModelWeb
+    summary: "Delete a model by its modelId"
+    description: "Delete a model by its modelId"
+    tags:
+      - "web"
+    security:
+      - BearerAuth: []
+    responses:
+      "200":
+        description: Model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelGetResponse'
